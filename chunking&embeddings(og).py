@@ -73,6 +73,8 @@ def gen_QueryEmbeddings(chunk,client):
 
 #function for chunking
 #chunks = []
+chunks = [] #for now this will be here to do 1-by-1 processing but shift this to out-of-loop for batch processing
+
 for file in os.listdir(dir):
     full_path=f'{dir}\\{file}'
     source = full_path  # document per local path or URL
@@ -81,7 +83,6 @@ for file in os.listdir(dir):
     result = converter.convert(source)
     doc = result.document
 
-    chunks = [] #for now this will be here to do 1-by-1 processing but shift this to out-of-loop for batch processing
     
     # Key-value fields
     for kv in doc.key_value_items:
@@ -123,6 +124,7 @@ for file in os.listdir(dir):
 
     print(chunks)
     print(len(chunks))
+
 
     # The client gets the API key from the environment variable `GEMINI_API_KEY`.(built-in if i have another api name then need to pass it in as param)
     client = genai.Client() #request to llm
