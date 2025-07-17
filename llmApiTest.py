@@ -1,26 +1,27 @@
-from dotenv import load_dotenv
+import subprocess
 import os
 
-#loading the env file
-load_dotenv()
+def flatten_xfa_with_pdftk(input_pdf):
+    """Flatten XFA PDF using PDFtk - most reliable method"""
+    try:
+        output_pdf = input_pdf.replace('.pdf', '_flattened.pdf')
+        # Split command into separate arguments
+        cmd = ['pdftk', input_pdf, 'output', output_pdf, 'flatten']
+        
+        result = subprocess.run(cmd, capture_output=True, text=True)
+        
+        if result.returncode == 0:
+            print(f"Successfully flattened XFA form to: {output_pdf}")
+            return True
+        else:
+            print(f"PDFtk error: {result.stderr}")
+            return False
+            
+    except FileNotFoundError:
+        print("PDFtk not installed. Install from: https://www.pdflabs.com/tools/pdftk-the-pdf-toolkit/")
+        return False
 
-#checking if env var is accessed
-api_key = os.getenv("GEMINI_API_KEY")
-
-#print("API Key:", api_key)
-
-from google import genai
-
-# The client gets the API key from the environment variable `GEMINI_API_KEY`.(built-in if i have another api name then need to pass it in as param)
-client = genai.Client() #request to llm
-#sending requests to the gemini 2.0 flash model
-response = client.models.generate_content(
-    model="gemini-2.5-pro", contents="say meow"
-    #its the same api key just change the model code.
-)
-print(response.text)
-
-response2 = client.models.generate_content(
-    model="gemini-2.0-flash", contents="Can you tell me your name and say response2 at the end"
-)
-print(response2.text)
+# Add debug prints to check paths
+print(f"Current working directory: {os.getcwd()}")
+print(f"Checking if file exists: {os.path.exists('xfa-example.pdf')}")
+flatten_xfa_with_pdftk('xfa-example.pdf')

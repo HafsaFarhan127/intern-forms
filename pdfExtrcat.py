@@ -205,6 +205,8 @@ def process_pdf_with_pymupdf(pdf_path, file_name):
         # Extract form fields
         form_fields = extract_form_fields_from_pdf(pdf_path)
         for field in form_fields:
+            with open("new_file.txt", "a") as file:
+                file.write(field)
             chunks.append({
                 "text": f"{field['key']}: {field['value']}",
                 "metadata": {
@@ -219,6 +221,8 @@ def process_pdf_with_pymupdf(pdf_path, file_name):
         tables = extract_tables_from_pdf(pdf_path)
         for table in tables:
             if len(table['text']) > 20:
+                with open("new_file.txt", "a") as file:
+                    file.write(table['text'])
                 chunks.append({
                     "text": table['text'],
                     "metadata": {
@@ -240,6 +244,8 @@ def process_pdf_with_pymupdf(pdf_path, file_name):
         
         for i, chunk_text in enumerate(text_chunks):
             if len(chunk_text) > 30:  # Only include substantial chunks
+                with open("new_file.txt", "a") as file:
+                    file.write(chunk_text)
                 chunks.append({
                     "text": chunk_text,
                     "metadata": {
@@ -253,6 +259,7 @@ def process_pdf_with_pymupdf(pdf_path, file_name):
         print(f"Error processing {file_name}: {e}")
     
     return chunks
+
 
 # Main processing loop
 all_chunks = []
